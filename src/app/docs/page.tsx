@@ -397,36 +397,132 @@ const groups: { key: string; label: string; color: string }[] = [
   { key: "schedule", label: "schedule", color: "text-accent" },
 ];
 
-const configFields = [
+interface ConfigField {
+  key: string;
+  type: string;
+  desc: string;
+}
+
+interface ConfigCategory {
+  category: string;
+  fields: ConfigField[];
+}
+
+const configCategories: ConfigCategory[] = [
   {
-    key: "ignore",
-    type: 'string[]',
-    example: '["dist/**", "**/tests/**"]',
-    desc: "Glob patterns for files to exclude from scanning. Merged with .gitignore.",
+    category: "General",
+    fields: [
+      {
+        key: "ignore",
+        type: "List[str]",
+        desc: "Glob patterns for files/folders to exclude from scans.",
+      },
+      {
+        key: "notes",
+        type: "str",
+        desc: "High-level project context provided to the AI.",
+      },
+      {
+        key: "instructions",
+        type: "str",
+        desc: "Specific documentation style or domain instructions.",
+      },
+      {
+        key: "entryHint",
+        type: "str",
+        desc: "Point to the main entry file to help trace wires.",
+      },
+      {
+        key: "skipGenerated",
+        type: "List[str]",
+        desc: "Optional override for default generated/lock file ignores.",
+      },
+    ],
   },
   {
-    key: "notes",
-    type: "string",
-    example: '"This is a React/Next.js frontend using Tailwind."',
-    desc: "Free-text notes about the project. Injected into the LLM's system prompt on every run.",
+    category: "LLM",
+    fields: [
+      {
+        key: "provider",
+        type: "str",
+        desc: "AI provider (e.g., anthropic, openai, google, ollama).",
+      },
+      {
+        key: "model",
+        type: "str",
+        desc: "Model identifier (e.g., claude-3-5-sonnet-latest).",
+      },
+      {
+        key: "baseUrl",
+        type: "str",
+        desc: "Custom API base URL (useful for local models or proxies).",
+      },
+      {
+        key: "maxTokensPerCall",
+        type: "int",
+        desc: "Maximum output tokens per individual agent call.",
+      },
+    ],
   },
   {
-    key: "instructions",
-    type: "string",
-    example: '"Focus on data-fetching patterns and state management."',
-    desc: "Specific documentation instructions for the agent — what to emphasize, what to skip.",
+    category: "Triage",
+    fields: [
+      {
+        key: "mode",
+        type: "str",
+        desc: "Default classification strategy (smart, core, skim, skip).",
+      },
+      {
+        key: "includeTests",
+        type: "bool",
+        desc: "Whether to process test files (defaults to false).",
+      },
+      {
+        key: "forceInclude",
+        type: "List[str]",
+        desc: "Patterns to always treat as Core documentation.",
+      },
+      {
+        key: "forceSkip",
+        type: "List[str]",
+        desc: "Patterns to always ignore.",
+      },
+    ],
   },
   {
-    key: "llm.provider",
-    type: "string",
-    example: '"anthropic"',
-    desc: 'LLM provider to use for this project. Overrides global setup. Options: anthropic, openai, google, ollama, groq, deepseek, mistral, llama-cloud, or any OpenAI-compatible endpoint.',
+    category: "Chunking",
+    fields: [
+      {
+        key: "tokenThreshold",
+        type: "int",
+        desc: "Files larger than this (in tokens) are split into chunks.",
+      },
+      {
+        key: "maxChunkTokens",
+        type: "int",
+        desc: "Target token count for each detail chunk.",
+      },
+      {
+        key: "overlapRatio",
+        type: "float",
+        desc: "Contextual overlap between chunks (e.g. 0.10 for 10%).",
+      },
+    ],
   },
   {
-    key: "llm.model",
-    type: "string",
-    example: '"claude-3-5-sonnet-latest"',
-    desc: "Specific model to use. Must be valid for the configured provider.",
+    category: "Parallel",
+    fields: [
+      {
+        key: "enabled",
+        type: "bool",
+        desc: "Enable/disable concurrent processing of files within the same tier.",
+      },
+      {
+        key: "maxWorkers",
+        type: "int",
+        desc: "Max number of concurrent LLM calls.",
+      },
+    ],
   },
 ];
 
@@ -686,34 +782,62 @@ export default function DocsPage() {
   "ignore": ["dist/**", "**/tests/**"],
   "notes": "This is a React/Next.js frontend using Tailwind.",
   "instructions": "Focus on data-fetching patterns and state management.",
+  "entryHint": "src/main.py",
   "llm": {
     "provider": "anthropic",
-    "model": "claude-3-5-sonnet-latest"
+    "model": "claude-3-5-sonnet-latest",
+    "baseUrl": "https://api.anthropic.com",
+    "maxTokensPerCall": 4096
+  },
+  "triage": {
+    "mode": "smart",
+    "includeTests": false,
+    "forceInclude": ["critical_logic/*.py"],
+    "forceSkip": ["legacy_v1/*.js"]
+  },
+  "chunking": {
+    "tokenThreshold": 6000,
+    "maxChunkTokens": 4000,
+    "overlapRatio": 0.10
+  },
+  "parallel": {
+    "enabled": true,
+    "maxWorkers": 4
   }
 }`}</pre>
               </div>
 
               {/* Field table */}
               <div className="border border-border">
-                <div className="grid grid-cols-[160px_80px_1fr] border-b border-border bg-bg-secondary">
-                  <div className="px-3 py-2 text-[9px] font-bold text-text-dim tracking-widest">FIELD</div>
+                <div className="grid grid-cols-[100px_140px_90px_1fr] border-b border-border bg-bg-secondary">
+                  <div className="px-3 py-2 text-[9px] font-bold text-text-dim tracking-widest">CATEGORY</div>
+                  <div className="px-3 py-2 text-[9px] font-bold text-text-dim tracking-widest border-l border-border">KEY</div>
                   <div className="px-3 py-2 text-[9px] font-bold text-text-dim tracking-widest border-l border-border">TYPE</div>
                   <div className="px-3 py-2 text-[9px] font-bold text-text-dim tracking-widest border-l border-border">DESCRIPTION</div>
                 </div>
-                {configFields.map((f, i) => (
-                  <div key={f.key} className={`grid grid-cols-[160px_80px_1fr] ${i < configFields.length - 1 ? "border-b border-border/50" : ""}`}>
-                    <div className="px-3 py-2.5">
-                      <code className="text-[10px] text-accent">{f.key}</code>
+                {configCategories.map((cat) =>
+                  cat.fields.map((f, fi) => (
+                    <div
+                      key={`${cat.category}-${f.key}`}
+                      className="grid grid-cols-[100px_140px_90px_1fr] border-b border-border/50 last:border-0"
+                    >
+                      <div className="px-3 py-2.5">
+                        {fi === 0 ? (
+                          <span className="text-[9px] font-bold text-text-dim tracking-wide">{cat.category}</span>
+                        ) : null}
+                      </div>
+                      <div className="px-3 py-2.5 border-l border-border/50">
+                        <code className="text-[10px] text-accent">{f.key}</code>
+                      </div>
+                      <div className="px-3 py-2.5 border-l border-border/50">
+                        <span className="text-[10px] text-amber">{f.type}</span>
+                      </div>
+                      <div className="px-3 py-2.5 border-l border-border/50">
+                        <p className="text-[10px] text-text-secondary leading-relaxed">{f.desc}</p>
+                      </div>
                     </div>
-                    <div className="px-3 py-2.5 border-l border-border/50">
-                      <span className="text-[10px] text-amber">{f.type}</span>
-                    </div>
-                    <div className="px-3 py-2.5 border-l border-border/50">
-                      <p className="text-[10px] text-text-secondary leading-relaxed">{f.desc}</p>
-                      <code className="text-[9px] text-text-dim mt-1 block">e.g. {f.example}</code>
-                    </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </section>
 
