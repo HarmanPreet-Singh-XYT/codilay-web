@@ -46,9 +46,13 @@ export default function CTASection() {
 
               {/* Install commands */}
               <div className="flex flex-col items-center gap-2 max-w-xl mx-auto">
+                <div className="w-full border border-border bg-bg-secondary px-3 py-1.5 text-[9px] font-bold text-text-dim tracking-widest text-left">
+                  INSTALL FROM PYPI (RECOMMENDED)
+                </div>
                 {[
-                  { cmd: "git clone https://github.com/HarmanPreet-Singh-XYT/codilay.git && cd codilay", key: "clone", label: "clone" },
-                  { cmd: 'pip install -e ".[all]"', key: "install", label: "install" },
+                  { cmd: "pip install codilay", key: "basic", label: "basic" },
+                  { cmd: 'pip install "codilay[all]"', key: "all", label: "all features" },
+                  { cmd: "pipx install codilay", key: "pipx", label: "global cli" },
                   { cmd: "codilay setup", key: "setup", label: "setup" },
                   { cmd: "codilay .", key: "run", label: "run" },
                 ].map((c) => (

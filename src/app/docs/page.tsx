@@ -9,6 +9,12 @@ export const metadata: Metadata = {
 
 // ─── data ──────────────────────────────────────────────────────────────────
 
+const pypiInstallSteps = [
+  { label: "basic", cmd: "pip install codilay" },
+  { label: "all", cmd: 'pip install "codilay[all]"' },
+  { label: "global", cmd: "pipx install codilay" },
+];
+
 const installSteps = [
   { label: "clone", cmd: "git clone https://github.com/HarmanPreet-Singh-XYT/codilay.git && cd codilay" },
   { label: "install", cmd: 'pip install -e ".[all]"' },
@@ -626,9 +632,40 @@ export default function DocsPage() {
             <section id="install">
               <div className="text-text-tertiary text-xs mb-1">## installation</div>
               <h2 className="text-lg font-bold mb-1">Getting started</h2>
-              <p className="text-text-secondary text-xs mb-4">
+
+              {/* PyPI — recommended */}
+              <p className="text-text-secondary text-xs mb-3 mt-4">
+                <span className="text-accent font-bold">Install from PyPI</span>
+                <span className="text-text-tertiary"> // recommended</span>
+              </p>
+              <div className="border border-border">
+                {pypiInstallSteps.map((step, i) => (
+                  <div key={step.label} className={`flex items-center${i > 0 ? " border-t border-border" : ""}`}>
+                    <span className="text-[9px] text-text-dim px-3 py-2.5 border-r border-border w-16 text-center shrink-0">
+                      {step.label}
+                    </span>
+                    <code className="flex-1 text-xs px-4 py-2.5 text-text-primary">
+                      <span className="text-accent">$ </span>{step.cmd}
+                    </code>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-2 border border-border bg-bg-secondary px-4 py-3 text-[11px] text-text-secondary">
+                <span className="text-accent font-bold">tip: </span>
                 <span className="text-text-tertiary">// </span>
-                CodiLay is not on PyPI — install from source via git clone.
+                use <code className="text-amber">pip install codilay</code> for a basic install,{" "}
+                <code className="text-amber">{`"codilay[all]"`}</code> for Web UI + Watch mode,{" "}
+                or <code className="text-amber">pipx install codilay</code> for a global CLI (recommended).
+              </div>
+
+              {/* Source install */}
+              <p className="text-text-secondary text-xs mb-3 mt-6">
+                <span className="text-text-tertiary font-bold">Install from source</span>
+                <span className="text-text-tertiary"> // for development / latest</span>
+              </p>
+              <p className="text-text-secondary text-xs mb-3">
+                <span className="text-text-tertiary">// </span>
+                CodiLay can also be installed directly from the GitHub repository.
               </p>
               <div className="border border-border">
                 {installSteps.map((step, i) => (

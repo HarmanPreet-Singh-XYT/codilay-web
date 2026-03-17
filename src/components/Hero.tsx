@@ -13,8 +13,9 @@ export default function Hero() {
   };
 
   const installSteps = [
-    { key: "clone", cmd: "git clone https://github.com/HarmanPreet-Singh-XYT/codilay.git && cd codilay" },
-    { key: "install", cmd: 'pip install -e ".[all]"' },
+    { key: "basic", cmd: "pip install codilay" },
+    { key: "all", cmd: 'pip install "codilay[all]"' },
+    { key: "pipx", cmd: "pipx install codilay" },
   ];
 
   return (
@@ -68,6 +69,9 @@ export default function Hero() {
 
             {/* Install commands */}
             <div className="flex flex-col gap-0 border border-border bg-bg-tertiary w-fit mb-3">
+              <div className="px-3 py-1.5 border-b border-border text-[9px] font-bold text-text-dim tracking-widest">
+                INSTALL FROM PYPI
+              </div>
               {installSteps.map((step, i) => (
                 <div
                   key={step.key}
