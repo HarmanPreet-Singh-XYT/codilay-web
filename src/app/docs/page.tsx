@@ -156,17 +156,56 @@ const commands: Command[] = [
     cmd: "codilay export .",
     action: "Export docs in AI-friendly format",
     group: "export",
-    desc: "Produces a compressed, token-efficient export of your documentation for feeding into another LLM's context window. Supports markdown, XML, and JSON with optional token budgets.",
+    desc: "Produces a compressed, token-efficient export of your documentation tailored for LLM context windows. Supports LLM-guided interactive customization, natural language queries, and pre-configured presets.",
     flags: [
+      { flag: "--interactive", desc: "Launch a conversational wizard to define your export spec" },
+      { flag: "--query \"<text>\"", desc: "One-shot natural language query to filter export content" },
+      { flag: "--preset <name>", desc: "Use a saved preset (structure, api-surface, etc.)" },
       { flag: "--format markdown|xml|json", desc: "Output format (default: markdown)" },
       { flag: "--max-tokens N", desc: "Cap the output at N tokens" },
-      { flag: "--no-graph", desc: "Exclude the dependency graph from the export" },
-      { flag: "-o <file>", desc: "Write output to a file instead of stdout" },
+      { flag: "--no-graph", desc: "Exclude the dependency graph" },
+      { flag: "--strip-implementation", desc: "Remove function bodies to save tokens" },
+      { flag: "-o <file>", desc: "Write output to a specific file" },
     ],
     examples: [
-      { cmd: "codilay export .", comment: "compact markdown (default)" },
-      { cmd: "codilay export . --format xml --max-tokens 4000" },
-      { cmd: "codilay export . -f json --no-graph -o context.json" },
+      { cmd: "codilay export . --interactive", comment: "LLM-guided export wizard" },
+      { cmd: "codilay export . --query \"just api routes and database models\"", comment: "NL query mode" },
+      { cmd: "codilay export . --preset architecture", comment: "use preset" },
+      { cmd: "codilay export . --strip-implementation", comment: "signatures only" },
+    ],
+  },
+  // Diff-run
+  {
+    cmd: "codilay diff-run .",
+    action: "Document code changes only since a boundary",
+    group: "diff-run",
+    desc: "Generates a focused \"what changed\" report instead of a full reference. Feeds git diffs and existing context to the AI to explain the impact of changes since a specific commit, tag, date, or branch.",
+    flags: [
+      { flag: "--since <boundary>", desc: "Commit hash, tag, or date (YYYY-MM-DD)" },
+      { flag: "--since-branch <name>", desc: "Compare current branch against target (e.g. main)" },
+      { flag: "--update-doc", desc: "Patch findings directly into CODEBASE.md" },
+    ],
+    examples: [
+      { cmd: "codilay diff-run . --since abc123f", comment: "since commit" },
+      { cmd: "codilay diff-run . --since-branch main", comment: "since branching from main" },
+      { cmd: "codilay diff-run . --since 2024-03-01", comment: "since date" },
+    ],
+  },
+  // Audit
+  {
+    cmd: "codilay audit .",
+    action: "Run automated codebase audits",
+    group: "audit",
+    desc: "Performs targeted security, architecture, performance, or quality scans. Analyzes the wire graph and file content through 60+ specialized audit lenses.",
+    flags: [
+      { flag: "--type <category>", desc: "Audit type (security, performance, architecture, quality, compliance, etc.)" },
+      { flag: "--mode passive|active", desc: "Passive (fast, uses existing doc) or Active (deep file reading)" },
+      { flag: "--list-types", desc: "Show all 60+ supported audit types" },
+    ],
+    examples: [
+      { cmd: "codilay audit . --type security --mode passive", comment: "fast security pass" },
+      { cmd: "codilay audit . --type architecture --mode active", comment: "deep architectural audit" },
+      { cmd: "codilay audit . --type performance --mode active", comment: "active performance scan" },
     ],
   },
   // Diff-doc
@@ -397,6 +436,8 @@ const groups: { key: string; label: string; color: string }[] = [
   { key: "web", label: "web-ui", color: "text-amber" },
   { key: "watch", label: "watch", color: "text-amber" },
   { key: "export", label: "export", color: "text-cyan" },
+  { key: "diff-run", label: "diff-run", color: "text-accent" },
+  { key: "audit", label: "audit", color: "text-amber" },
   { key: "graph", label: "graph", color: "text-accent" },
   { key: "triage", label: "triage", color: "text-amber" },
   { key: "team", label: "team", color: "text-cyan" },
@@ -578,14 +619,14 @@ export default function DocsPage() {
           <h1 className="text-3xl font-bold tracking-tight mb-2">CLI Reference</h1>
           <p className="text-text-secondary text-sm max-w-2xl">
             <span className="text-text-tertiary">// </span>
-            all 29 commands, flags, and examples — sourced directly from the CodiLay README.
+            all 33 commands, flags, and examples — sourced directly from the CodiLay README.
           </p>
 
           {/* Quick stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 border border-border mt-6 w-fit">
             {[
-              { val: "29", label: "commands" },
-              { val: "9", label: "groups" },
+              { val: "33", label: "commands" },
+              { val: "11", label: "groups" },
               { val: "359/359", label: "tests" },
               { val: "MIT", label: "license" },
             ].map((s, i) => (
@@ -937,7 +978,11 @@ export default function DocsPage() {
                     { file: "server.py", desc: "FastAPI Intelligence Server (Web UI + API)" },
                     { file: "watcher.py", desc: "File system watcher (watch mode)" },
                     { file: "exporter.py", desc: "AI-friendly doc export (markdown/xml/json)" },
+                    { file: "export_spec.py", desc: "Export specification schema & presets" },
+                    { file: "interactive_export.py", desc: "LLM conversation handler for exports" },
                     { file: "doc_differ.py", desc: "Section-level doc diffing & version snapshots" },
+                    { file: "diff_analyzer.py", desc: "Git diff extraction & boundary resolution (diff-run)" },
+                    { file: "change_report.py", desc: "Change report generation (diff-run)" },
                     { file: "triage_feedback.py", desc: "Triage correction store & feedback loop" },
                     { file: "graph_filter.py", desc: "Dependency graph filtering engine" },
                     { file: "team_memory.py", desc: "Shared team knowledge base" },
