@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "CodiLay — CLI Reference & Docs",
   description:
-    "Full CLI reference for CodiLay: all 29 commands, flags, usage examples, and codilay.config.json schema.",
+    "Full CLI reference for CodiLay: all 34 commands, flags, usage examples, and codilay.config.json schema.",
 };
 
 // ─── data ──────────────────────────────────────────────────────────────────
@@ -428,6 +428,25 @@ const commands: Command[] = [
     desc: "Upvote or downvote a stored fact by its ID. Vote scores are surfaced to the AI to indicate community confidence.",
     examples: [{ cmd: "codilay team vote . <fact-id> up" }],
   },
+  // Annotate
+  {
+    cmd: "codilay annotate .",
+    action: "Write docs back into source files",
+    group: "annotate",
+    desc: "Uses wire knowledge to write docstrings and wire comments directly into your source code. Language-aware and supports multiple annotation levels.",
+    flags: [
+      { flag: "--dry-run", desc: "Preview what would be added without writing to disk" },
+      { flag: "--scope <path>", desc: "Restrict annotation to a specific folder or file" },
+      { flag: "--level docstrings|inline|full", desc: "Detail level (default: docstrings)" },
+      { flag: "--rollback <id>", desc: "Undo a previous annotation run by timestamp ID" },
+    ],
+    examples: [
+      { cmd: "codilay annotate .", comment: "annotate project (docstrings)" },
+      { cmd: "codilay annotate . --dry-run", comment: "preview only" },
+      { cmd: "codilay annotate . --scope src/api/ --level full", comment: "max detail for folder" },
+      { cmd: "codilay annotate . --rollback 20240314_120000" },
+    ],
+  },
 ];
 
 const groups: { key: string; label: string; color: string }[] = [
@@ -442,6 +461,7 @@ const groups: { key: string; label: string; color: string }[] = [
   { key: "triage", label: "triage", color: "text-amber" },
   { key: "team", label: "team", color: "text-cyan" },
   { key: "schedule", label: "schedule", color: "text-accent" },
+  { key: "annotate", label: "annotate", color: "text-amber" },
 ];
 
 interface ConfigField {
@@ -574,13 +594,14 @@ const configCategories: ConfigCategory[] = [
 ];
 
 const providers = [
-  { name: "Anthropic", models: "claude-3-5-sonnet-latest, claude-3-haiku-...", tag: "CLOUD" },
-  { name: "OpenAI", models: "gpt-4o, gpt-4o-mini, o1, ...", tag: "CLOUD" },
-  { name: "Google Gemini", models: "gemini-1.5-pro, gemini-flash, ...", tag: "CLOUD" },
+  { name: "Anthropic", models: "claude-3-5-sonnet-latest ✦, claude-3-haiku-...", tag: "CLOUD" },
+  { name: "OpenAI", models: "gpt-4o, gpt-4o-mini ✦, o1 ✦, o3 ✦, ...", tag: "CLOUD" },
+  { name: "Google Gemini", models: "gemini-1.5-pro, gemini-2.0-flash, ...", tag: "CLOUD" },
   { name: "Ollama", models: "llama3, mistral, codellama, ...", tag: "LOCAL" },
   { name: "Groq", models: "llama3-70b-8192, mixtral-8x7b, ...", tag: "LOCAL" },
-  { name: "DeepSeek", models: "deepseek-coder, deepseek-chat", tag: "CLOUD" },
+  { name: "DeepSeek", models: "deepseek-coder, deepseek-reasoner ✦, ...", tag: "CLOUD" },
   { name: "Mistral", models: "mistral-large, codestral, ...", tag: "CLOUD" },
+  { name: "xAI", models: "grok-beta, grok-2", tag: "CLOUD" },
   { name: "Llama Cloud", models: "llama-3.1-70b-instruct, ...", tag: "CLOUD" },
   { name: "OpenAI-compatible", models: "Any endpoint with /v1/chat/completions", tag: "CUSTOM" },
 ];
@@ -619,13 +640,13 @@ export default function DocsPage() {
           <h1 className="text-3xl font-bold tracking-tight mb-2">CLI Reference</h1>
           <p className="text-text-secondary text-sm max-w-2xl">
             <span className="text-text-tertiary">// </span>
-            all 33 commands, flags, and examples — sourced directly from the CodiLay README.
+            all 34 commands, flags, and examples — sourced directly from the CodiLay README.
           </p>
 
           {/* Quick stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 border border-border mt-6 w-fit">
             {[
-              { val: "33", label: "commands" },
+              { val: "34", label: "commands" },
               { val: "11", label: "groups" },
               { val: "359/359", label: "tests" },
               { val: "MIT", label: "license" },
@@ -651,6 +672,9 @@ export default function DocsPage() {
                 { href: "#install", label: "installation" },
                 { href: "#quick-ref", label: "quick reference" },
                 ...groups.map(g => ({ href: `#group-${g.key}`, label: g.label })),
+                { href: "#wire-model", label: "the wire model" },
+                { href: "#smart-triage", label: "smart triage" },
+                { href: "#resilience", label: "resilience & recovery" },
                 { href: "#config", label: "config file" },
                 { href: "#providers", label: "providers" },
                 { href: "#project-structure", label: "project structure" },
@@ -841,6 +865,78 @@ export default function DocsPage() {
                 </section>
               );
             })}
+ 
+            {/* Core Concepts: The Wire Model */}
+            <section id="wire-model">
+              <div className="text-text-tertiary text-xs mb-1">## core-concepts</div>
+              <h2 className="text-lg font-bold mb-1 text-accent">The Wire Model</h2>
+              <p className="text-text-secondary text-xs mb-4">
+                <span className="text-text-tertiary">// </span>
+                CodiLay treats every import, call, and reference as a <span className="text-accent font-bold">Wire</span>.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="border border-border p-4 bg-bg-secondary">
+                  <div className="text-[10px] font-bold text-accent mb-2">OPEN WIRES</div>
+                  <p className="text-[11px] text-text-secondary leading-relaxed">
+                    Unresolved references that the agent is "hunting" for. These form the bridge between the processed and unprocessed parts of your codebase.
+                  </p>
+                </div>
+                <div className="border border-border p-4 bg-bg-secondary">
+                  <div className="text-[10px] font-bold text-cyan mb-2">CLOSED WIRES</div>
+                  <p className="text-[11px] text-text-secondary leading-relaxed">
+                    Successfully traced connections that form segments of the dependency graph. These represent verified implementation links.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* Core Concepts: Smart Triage */}
+            <section id="smart-triage">
+              <div className="text-text-tertiary text-xs mb-1">## core-concepts</div>
+              <h2 className="text-lg font-bold mb-1 text-cyan">Smart Triage</h2>
+              <p className="text-text-secondary text-xs mb-4">
+                <span className="text-text-tertiary">// </span>
+                High-speed classification phase to save tokens and focus on what matters.
+              </p>
+              <div className="border border-border overflow-hidden">
+                <div className="grid grid-cols-3 border-b border-border bg-bg-secondary">
+                  {['CORE', 'SKIM', 'SKIP'].map(tier => (
+                    <div key={tier} className="px-3 py-2 text-[9px] font-bold text-text-dim text-center border-r border-border last:border-0">{tier}</div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-3">
+                  <div className="p-3 text-[10px] text-text-secondary border-r border-border">Full architectural analysis and deep documentation.</div>
+                  <div className="p-3 text-[10px] text-text-secondary border-r border-border">Metadata and signatures only — saves tokens on minor utilities.</div>
+                  <div className="p-3 text-[10px] text-text-secondary">Ignores boilerplate, generated code, and platform noise.</div>
+                </div>
+              </div>
+            </section>
+
+            {/* Resilience & Recovery */}
+            <section id="resilience">
+              <div className="text-text-tertiary text-xs mb-1">## resilience</div>
+              <h2 className="text-lg font-bold mb-1 text-amber">Resilience & Recovery</h2>
+              <p className="text-text-secondary text-xs mb-4">
+                <span className="text-text-tertiary">// </span>
+                Designed to survive interruptions without losing progress or money.
+              </p>
+              <div className="space-y-3">
+                {[
+                  { title: "State Backups", desc: "Saves atomically after every file. Keeps 3 rolling backups (.bak.1, .bak.2, .bak.3) for auto-recovery if primary state is corrupt." },
+                  { title: "Resume From Any Point", desc: "Whether Ctrl+C, crash, or API failure, the run resumes exactly where it stopped with zero-cost re-verification." },
+                  { title: "Smart Resume Preview", desc: "Interactively previews processed vs. remaining files with token cost clarity before confirmation." },
+                  { title: "Lock Prevention", desc: "Uses PID-validated lock files to prevent concurrent runs on the same project path." },
+                  { title: "Auth-Error Pause", desc: "If an API key expires mid-run, the process pauses and saves state, allowing you to update keys and resume." },
+                  { title: "Complete Error Panel", desc: "Displays a structured summary of every skip, warning, and non-fatal error at the end of the run." },
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-4 p-4 border border-border bg-bg-secondary/30 relative overflow-hidden group">
+                    <div className="absolute top-0 left-0 w-1 h-full bg-amber opacity-30 group-hover:opacity-100 transition-opacity" />
+                    <div className="w-1/4 shrink-0 text-[10px] font-bold text-amber">{item.title.toUpperCase()}</div>
+                    <div className="flex-1 text-[11px] text-text-secondary leading-relaxed">{item.desc}</div>
+                  </div>
+                ))}
+              </div>
+            </section>
 
             {/* Config file reference */}
             <section id="config">
@@ -975,19 +1071,23 @@ export default function DocsPage() {
                     { file: "wire_manager.py", desc: "Linkage & dependency resolution" },
                     { file: "docstore.py", desc: "Living CODEBASE.md management" },
                     { file: "chatstore.py", desc: "Persistent memory & chat history" },
+                    { file: "state.py", desc: "Atomic saves & 3-backup rotation" },
+                    { file: "error_tracker.py", desc: "Run-scoped error collector" },
+                    { file: "pricing.py", desc: "Model pricing & cost estimation" },
                     { file: "server.py", desc: "FastAPI Intelligence Server (Web UI + API)" },
                     { file: "watcher.py", desc: "File system watcher (watch mode)" },
                     { file: "exporter.py", desc: "AI-friendly doc export (markdown/xml/json)" },
                     { file: "export_spec.py", desc: "Export specification schema & presets" },
                     { file: "interactive_export.py", desc: "LLM conversation handler for exports" },
-                    { file: "doc_differ.py", desc: "Section-level doc diffing & version snapshots" },
-                    { file: "diff_analyzer.py", desc: "Git diff extraction & boundary resolution (diff-run)" },
+                    { file: "doc_differ.py", desc: "Section-level doc diffing & snapshots" },
+                    { file: "diff_analyzer.py", desc: "Git diff boundary resolution" },
                     { file: "change_report.py", desc: "Change report generation (diff-run)" },
-                    { file: "triage_feedback.py", desc: "Triage correction store & feedback loop" },
+                    { file: "triage_feedback.py", desc: "Triage correction store" },
                     { file: "graph_filter.py", desc: "Dependency graph filtering engine" },
                     { file: "team_memory.py", desc: "Shared team knowledge base" },
-                    { file: "search.py", desc: "Full-text conversation search (inverted index)" },
+                    { file: "search.py", desc: "Full-text conversation search" },
                     { file: "scheduler.py", desc: "Cron & commit-based auto re-runs" },
+                    { file: "annotator.py", desc: "Code annotation engine" },
                     { file: "web/", desc: "Premium web frontend" },
                   ].map((f, i, arr) => (
                     <div key={f.file} className={`flex items-baseline gap-4 py-1 ${i < arr.length - 1 ? "border-b border-border/20" : ""}`}>
