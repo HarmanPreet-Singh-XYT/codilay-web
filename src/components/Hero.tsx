@@ -42,13 +42,13 @@ export default function Hero() {
           <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse-dot" />
           <span className="text-accent font-bold">codilay</span>
           <span className="text-text-dim">·</span>
-          <span>v0.9.0-beta</span>
+          <span>v0.2.0</span>
           <span className="text-text-dim">·</span>
           <span>open-source</span>
           <span className="text-text-dim">·</span>
           <span>python 3.11+</span>
           <span className="text-text-dim">·</span>
-          <span className="text-amber">359/359 tests ✓</span>
+          <span className="text-accent">500+ tests ✓</span>
         </div>
 
         {/* Two-column layout */}
@@ -160,10 +160,10 @@ export default function Hero() {
             {/* Stats strip at bottom */}
             <div className="grid grid-cols-4 divide-x divide-border border-t border-border">
               {[
-                { val: "~10k", label: "loc" },
-                { val: "29", label: "commands" },
-                { val: "359", label: "tests" },
-                { val: "0", label: "stale docs" },
+                { val: "30k+", label: "loc" },
+                { val: "30+", label: "commands" },
+                { val: "500+", label: "tests" },
+                { val: "30+", label: "files" },
               ].map((s) => (
                 <div key={s.label} className="px-3 py-2 text-center">
                   <div className="text-accent text-xs font-bold">{s.val}</div>

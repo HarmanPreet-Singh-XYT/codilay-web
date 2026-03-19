@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "CodiLay — CLI Reference & Docs",
   description:
-    "Full CLI reference for CodiLay: all 34 commands, flags, usage examples, and codilay.config.json schema.",
+    "Full CLI reference for CodiLay: all 30+ commands, flags, usage examples, and codilay.config.json schema.",
 };
 
 // ─── data ──────────────────────────────────────────────────────────────────
@@ -640,15 +640,15 @@ export default function DocsPage() {
           <h1 className="text-3xl font-bold tracking-tight mb-2">CLI Reference</h1>
           <p className="text-text-secondary text-sm max-w-2xl">
             <span className="text-text-tertiary">// </span>
-            all 34 commands, flags, and examples — sourced directly from the CodiLay README.
+            all 30+ commands, flags, and examples — sourced directly from the CodiLay README.
           </p>
 
           {/* Quick stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 border border-border mt-6 w-fit">
             {[
-              { val: "34", label: "commands" },
-              { val: "11", label: "groups" },
-              { val: "359/359", label: "tests" },
+              { val: "30+", label: "commands" },
+              { val: "12", label: "groups" },
+              { val: "500+", label: "tests" },
               { val: "MIT", label: "license" },
             ].map((s, i) => (
               <div key={s.label} className={`px-4 py-2 text-center ${i < 3 ? "border-r border-border" : ""}`}>

@@ -97,7 +97,7 @@ export default function FeaturesGrid() {
         <SectionHeader
           label="features"
           title="everything you need. nothing you don&apos;t."
-          description="29 CLI commands. 10 integrated feature modules. All built to keep your codebase documentation alive and useful."
+          description="30+ CLI commands. 10 integrated feature modules. All built to keep your codebase documentation alive and useful."
           center
         />
 

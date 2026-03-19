@@ -7,7 +7,7 @@ const layers = [
     tag: "CLI",
     tagColor: "text-accent",
     tagBg: "bg-accent/10 border-accent/30",
-    desc: "29 commands via Click. Interactive TUI with Rich. Init, run, watch, export, search, schedule, and more. Entry point for everything.",
+    desc: "30+ commands via Click. Interactive TUI with Rich. Init, run, watch, export, search, schedule, and more. Entry point for everything.",
     files: "cli.py · settings.py",
   },
   {
@@ -59,7 +59,7 @@ export default function Architecture() {
         <SectionHeader
           label="architecture"
           title="built in layers. each one independent."
-          description="~10,325 lines across ~24 source files. Every layer can operate independently — CLI without web UI, agent without watcher, chat without scheduler."
+          description="30k+ lines across 30+ source files. Every layer can operate independently — CLI without web UI, agent without watcher, chat without scheduler."
           center
         />
 
@@ -92,10 +92,10 @@ export default function Architecture() {
         <AnimatedSection delay={450} className="mt-4">
           <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-0 border border-border">
             {[
-              { value: "~24", label: "source files" },
-              { value: "~10,325", label: "lines of code" },
-              { value: "25+", label: "CLI commands" },
-              { value: "359/359", label: "tests passing" },
+              { value: "30+", label: "source files" },
+              { value: "30k+", label: "lines of code" },
+              { value: "30+", label: "CLI commands" },
+              { value: "500+", label: "tests passing" },
             ].map((s, i) => (
               <div
                 key={s.label}

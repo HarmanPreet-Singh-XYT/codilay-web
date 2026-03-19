@@ -39,11 +39,11 @@ export default function Footer() {
           <div className="flex items-center gap-3 text-text-dim text-[10px]">
             <span>python 3.11+</span>
             <span className="text-border">·</span>
-            <span>~10,325 loc</span>
+            <span>30k+ loc</span>
             <span className="text-border">·</span>
-            <span>359 tests</span>
+            <span>500+ tests</span>
             <span className="text-border">·</span>
-            <span>25+ commands</span>
+            <span>30+ commands</span>
           </div>
         </div>
       </div>
