@@ -447,6 +447,51 @@ const commands: Command[] = [
       { cmd: "codilay annotate . --rollback 20240314_120000" },
     ],
   },
+  // Commit-doc
+  {
+    cmd: "codilay commit-doc",
+    action: "Generate plain-language commit documentation",
+    group: "commit-doc",
+    desc: "Reads the git diff for commits and writes a plain-language document explaining what changed in each file and why it matters. Optionally runs a second pass to score the diff across five quality dimensions.",
+    flags: [
+      { flag: "<hash>", desc: "Generate a doc for a specific commit" },
+      { flag: "--range <range>", desc: "Generate docs for all commits in a range" },
+      { flag: "--context", desc: "Include relevant CODEBASE.md sections" },
+      { flag: "--metrics", desc: "Include 5-dimension quality metrics analysis" },
+      { flag: "--all", desc: "Backfill docs for every commit in the repo" },
+      { flag: "--last N", desc: "Backfill the last N commits" },
+      { flag: "--from A --to B", desc: "Backfill a specific commit range" },
+      { flag: "--author <name>", desc: "Backfill only commits by a given author" },
+      { flag: "--path <path>", desc: "Backfill only commits touching a path" },
+      { flag: "--force", desc: "Re-process commits that already have docs" },
+      { flag: "--force-metrics", desc: "Add metrics to documented commits that lack them" },
+      { flag: "--workers N", desc: "Parallel workers for backfill (default: 4)" },
+      { flag: "--yes", desc: "Skip cost preview and run immediately" },
+    ],
+    examples: [
+      { cmd: "codilay commit-doc", comment: "document the last commit" },
+      { cmd: "codilay commit-doc abc123f" },
+      { cmd: "codilay commit-doc --range main..HEAD" },
+      { cmd: "codilay commit-doc --metrics" },
+      { cmd: "codilay commit-doc --all" },
+      { cmd: "codilay commit-doc --last 20" },
+    ],
+  },
+  // Hooks
+  {
+    cmd: "codilay hooks",
+    action: "Manage git hooks",
+    group: "hooks",
+    desc: "Install or remove git hooks, such as automatically generating commit docs after each commit.",
+    flags: [
+      { flag: "install <dir> --commit-doc", desc: "Install post-commit doc hook" },
+      { flag: "uninstall <dir> --commit-doc", desc: "Remove post-commit doc hook" },
+    ],
+    examples: [
+      { cmd: "codilay hooks install . --commit-doc" },
+      { cmd: "codilay hooks uninstall . --commit-doc" },
+    ],
+  },
 ];
 
 const groups: { key: string; label: string; color: string }[] = [
@@ -462,6 +507,8 @@ const groups: { key: string; label: string; color: string }[] = [
   { key: "team", label: "team", color: "text-cyan" },
   { key: "schedule", label: "schedule", color: "text-accent" },
   { key: "annotate", label: "annotate", color: "text-amber" },
+  { key: "commit-doc", label: "commit-doc", color: "text-accent" },
+  { key: "hooks", label: "hooks", color: "text-cyan" },
 ];
 
 interface ConfigField {
@@ -647,8 +694,8 @@ export default function DocsPage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 border border-border mt-6 w-fit">
             {[
               { val: "30+", label: "commands" },
-              { val: "12", label: "groups" },
-              { val: "500+", label: "tests" },
+              { val: "14", label: "groups" },
+              { val: "600+", label: "tests" },
               { val: "MIT", label: "license" },
             ].map((s, i) => (
               <div key={s.label} className={`px-4 py-2 text-center ${i < 3 ? "border-r border-border" : ""}`}>

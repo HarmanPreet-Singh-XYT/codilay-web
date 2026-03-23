@@ -48,7 +48,7 @@ export default function Hero() {
           <span className="text-text-dim">·</span>
           <span>python 3.11+</span>
           <span className="text-text-dim">·</span>
-          <span className="text-accent">500+ tests ✓</span>
+          <span className="text-accent">600+ tests ✓</span>
         </div>
 
         {/* Two-column layout */}
@@ -162,7 +162,7 @@ export default function Hero() {
               {[
                 { val: "30k+", label: "loc" },
                 { val: "30+", label: "commands" },
-                { val: "500+", label: "tests" },
+                { val: "600+", label: "tests" },
                 { val: "30+", label: "files" },
               ].map((s) => (
                 <div key={s.label} className="px-3 py-2 text-center">

@@ -41,7 +41,7 @@ export default function Footer() {
             <span className="text-border">·</span>
             <span>30k+ loc</span>
             <span className="text-border">·</span>
-            <span>500+ tests</span>
+            <span>600+ tests</span>
             <span className="text-border">·</span>
             <span>30+ commands</span>
           </div>

@@ -95,7 +95,7 @@ export default function Architecture() {
               { value: "30+", label: "source files" },
               { value: "30k+", label: "lines of code" },
               { value: "30+", label: "CLI commands" },
-              { value: "500+", label: "tests passing" },
+              { value: "600+", label: "tests passing" },
             ].map((s, i) => (
               <div
                 key={s.label}
