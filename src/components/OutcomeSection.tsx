@@ -92,7 +92,7 @@ export default function OutcomeSection() {
         {/* Learning loop */}
         <AnimatedSection delay={400} className="mt-8">
           <div className="border border-accent/25 bg-bg-card p-5 max-w-3xl mx-auto relative overflow-hidden">
-            <div className="absolute top-0 inset-x-0 h-px" style={{ background: "linear-gradient(90deg, transparent, #00ff41, transparent)" }} />
+            <div className="absolute top-0 inset-x-0 h-px" style={{ background: "linear-gradient(90deg, transparent, #34d399, transparent)" }} />
             <div className="text-[10px] text-text-tertiary mb-3">
               <span className="text-accent">##</span> learning-loop
             </div>

@@ -19,7 +19,7 @@ export default function CTASection() {
         <AnimatedSection>
           <div className="relative border border-accent/25 bg-bg-secondary overflow-hidden">
             {/* Top accent line */}
-            <div className="absolute top-0 inset-x-0 h-px" style={{ background: "linear-gradient(90deg, transparent, #00ff41, transparent)" }} />
+            <div className="absolute top-0 inset-x-0 h-px" style={{ background: "linear-gradient(90deg, transparent, #34d399, transparent)" }} />
 
             <div className="p-8 md:p-12 text-center">
               {/* Status */}

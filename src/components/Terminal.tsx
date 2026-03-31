@@ -70,7 +70,7 @@ export const T = {
       className="text-red"
       style={{
         textDecoration: "underline wavy",
-        textDecorationColor: "#ff3333",
+        textDecorationColor: "#f87171",
       }}
     >
       {children}

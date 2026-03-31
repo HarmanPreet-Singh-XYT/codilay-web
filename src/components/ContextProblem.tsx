@@ -29,7 +29,7 @@ export default function ContextProblem() {
                   <span className="text-red font-bold">OVERFLOW</span>
                 </div>
                 <div className="h-2 bg-bg-tertiary overflow-hidden">
-                  <div className="h-full w-full" style={{ background: "linear-gradient(90deg, #ffb800, #ff3333)" }} />
+                  <div className="h-full w-full" style={{ background: "linear-gradient(90deg, #fbbf24, #f87171)" }} />
                 </div>
                 <p className="text-[10px] text-text-tertiary mt-1">
                   paste entire repo → model forgets beginning by the end
@@ -57,7 +57,7 @@ export default function ContextProblem() {
           {/* With CodiLay */}
           <AnimatedSection delay={160}>
             <div className="border border-accent/30 bg-bg-card p-6 h-full relative overflow-hidden">
-              <div className="absolute top-0 inset-x-0 h-px" style={{ background: "linear-gradient(90deg, transparent, #00ff41, transparent)" }} />
+              <div className="absolute top-0 inset-x-0 h-px" style={{ background: "linear-gradient(90deg, transparent, #34d399, transparent)" }} />
 
               <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border">
                 <span className="text-[10px] font-bold text-accent border border-accent/30 bg-accent/10 px-1.5 py-0.5">OK</span>
@@ -71,7 +71,7 @@ export default function ContextProblem() {
                   <span className="text-accent font-bold">OPTIMAL</span>
                 </div>
                 <div className="h-2 bg-bg-tertiary overflow-hidden">
-                  <div className="h-full" style={{ width: "35%", background: "linear-gradient(90deg, #00ff41, #00cccc)" }} />
+                  <div className="h-full" style={{ width: "35%", background: "linear-gradient(90deg, #34d399, #22d3ee)" }} />
                 </div>
                 <p className="text-[10px] text-text-tertiary mt-1">
                   only open wires + relevant sections → always lean

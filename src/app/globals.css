@@ -2,50 +2,51 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── Pure terminal black ── */
-  --color-bg-primary:    #080808;
-  --color-bg-secondary:  #0d0d0d;
-  --color-bg-tertiary:   #111111;
-  --color-bg-card:       #0f0f0f;
-  --color-bg-card-hover: #141414;
+  /* ── Softer Slate-Dark Base ── */
+  --color-bg-primary:    #0c0d12; /* Deep slate-black */
+  --color-bg-secondary:  #13151c; /* Slightly lighter */
+  --color-bg-tertiary:   #191b24; 
+  --color-bg-card:       #151720;
+  --color-bg-card-hover: #1e212d;
 
-  /* ── Sharp borders ── */
-  --color-border:        #1e1e1e;
-  --color-border-light:  #2a2a2a;
-  --color-border-bright: #3a3a3a;
+  /* ── Balanced borders ── */
+  --color-border:        #1f2230;
+  --color-border-light:  #2d3145;
+  --color-border-bright: #3d425c;
 
-  /* ── Text ── */
-  --color-text-primary:   #e8e8e8;
-  --color-text-secondary: #888888;
-  --color-text-tertiary:  #444444;
-  --color-text-dim:       #2d2d2d;
+  /* ── Refined Text (Slate-based) ── */
+  --color-text-primary:   #d1d5db; /* Gray 300 - much softer than #e8e8e8 */
+  --color-text-secondary: #94a3b8; /* Slate 400 */
+  --color-text-tertiary:  #64748b; /* Slate 500 */
+  --color-text-dim:       #475569; /* Slate 600 */
 
-  /* ── Hacker green (primary accent) ── */
-  --color-accent:        #00ff41;
-  --color-accent-dim:    #00cc33;
-  --color-accent-muted:  #003311;
-  --color-accent-glow:   rgba(0, 255, 65, 0.15);
+  /* ── Emerald Green (Softer Hacker Green) ── */
+  --color-accent:        #34d399; /* Emerald 400 */
+  --color-accent-dim:    #10b981; /* Emerald 500 */
+  --color-accent-muted:  #064e3b; /* Emerald 900 */
+  --color-accent-glow:   rgba(52, 211, 153, 0.12);
 
-  /* ── Amber (secondary / warning) ── */
-  --color-amber:         #ffb800;
-  --color-amber-dim:     #cc9200;
-  --color-amber-muted:   #2a1f00;
+  /* ── Soft Amber ── */
+  --color-amber:         #fbbf24; /* Amber 400 */
+  --color-amber-dim:     #f59e0b; /* Amber 500 */
+  --color-amber-muted:   #451a03; /* Amber 900 */
 
-  /* ── Red (error / problem) ── */
-  --color-red:           #ff3333;
-  --color-red-dim:       #cc2222;
-  --color-red-muted:     #2a0000;
+  /* ── Soft Red ── */
+  --color-red:           #f87171; /* Red 400 */
+  --color-red-dim:       #ef4444; /* Red 500 */
+  --color-red-muted:     #450a0a; /* Red 900 */
 
-  /* ── Cyan (resolved / success) ── */
-  --color-cyan:          #00cccc;
-  --color-cyan-dim:      #009999;
-  --color-cyan-muted:    #001a1a;
+  /* ── Soft Cyan ── */
+  --color-cyan:          #22d3ee; /* Cyan 400 */
+  --color-cyan-dim:      #06b6d4; /* Cyan 500 */
+  --color-cyan-muted:    #083344; /* Cyan 900 */
 
-  /* ── Semantic aliases (keep component compat) ── */
-  --color-wire-open:    #ff3333;
-  --color-wire-closed:  #00cccc;
-  --color-wire-pending: #ffb800;
-  --color-accent-light: #00ff41;
+  /* ── Semantic aliases ── */
+  --color-wire-open:    #f87171;
+  --color-wire-closed:  #22d3ee;
+  --color-wire-pending: #fbbf24;
+  --color-accent-light: #6ee7b7;
+
 
   /* ── Fonts: mono everywhere ── */
   --font-sans:  "JetBrains Mono", "Fira Code", monospace;
@@ -111,33 +112,33 @@ body {
 
 /* ── Utility classes ── */
 .gradient-text {
-  background-image: linear-gradient(90deg, #00ff41, #00cccc);
+  background-image: linear-gradient(90deg, #34d399, #22d3ee); /* Emerald 400 to Cyan 400 */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .gradient-text-amber {
-  background-image: linear-gradient(90deg, #ffb800, #ff3333);
+  background-image: linear-gradient(90deg, #fbbf24, #f87171); /* Amber 400 to Red 400 */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .glow-green {
-  box-shadow: 0 0 20px rgba(0, 255, 65, 0.25), 0 0 40px rgba(0, 255, 65, 0.1);
+  box-shadow: 0 0 20px rgba(52, 211, 153, 0.15), 0 0 40px rgba(52, 211, 153, 0.05);
 }
 
 .glow-green-sm {
-  box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.1);
 }
 
 .text-glow-green {
-  text-shadow: 0 0 10px rgba(0, 255, 65, 0.6);
+  text-shadow: 0 0 10px rgba(52, 211, 153, 0.4);
 }
 
 .border-glow-green {
-  box-shadow: inset 0 0 0 1px rgba(0, 255, 65, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(52, 211, 153, 0.2);
 }
 
 /* CRT scanline overlay */
@@ -166,11 +167,11 @@ body {
 .cursor::after {
   content: "_";
   animation: blink 1s step-end infinite;
-  color: #00ff41;
+  color: #34d399;
 }
 
 /* Selection */
 ::selection {
-  background: rgba(0, 255, 65, 0.2);
-  color: #00ff41;
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
 }

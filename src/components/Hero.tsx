@@ -23,16 +23,16 @@ export default function Hero() {
       {/* Grid bg */}
       <div className="absolute inset-0 pointer-events-none">
         <div
-          className="absolute inset-0 opacity-30"
+          className="absolute inset-0 opacity-20"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(0,255,65,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,65,0.05) 1px, transparent 1px)",
+              "linear-gradient(rgba(52,211,153,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(52,211,153,0.05) 1px, transparent 1px)",
             backgroundSize: "32px 32px",
           }}
         />
         <div
           className="absolute top-0 left-1/3 w-[400px] h-[300px] rounded-full blur-[120px] animate-glow-pulse"
-          style={{ background: "#00ff41", opacity: 0.05 }}
+          style={{ background: "#34d399", opacity: 0.04 }}
         />
       </div>
 
